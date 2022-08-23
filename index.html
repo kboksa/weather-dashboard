@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <!-- <h1>Weather Dashboard</h1> -->
+  <body class="flex-colomn min-100-vh">
+    <header class="hero">
+      <h1 class="app-title">
+        <i class="fas fa-cloud-sun-rain"></i> Weather Dashboard
+      </h1>
+    </header>
+
+    <main class="card">
+      <div class="col-12 col sm-12 col-md-4 float-left">
+        <div class="card">
+          <h2 class="card-header text-uppercase">Search for a city</h2>
+          <div id="user-form" class="card-body">
+            <input type="text" id="myInput" placeholder="City Name..." />
+            <button class="btn" id="searchBtn"></button>
+          </div>
+        </div>
+
+        <div class="card history">
+          <h3 class="card-header text-uppercase">Search History</h3>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-12 col-md08 float-right">
+        <h2 class="subtitle text-uppercase bg-light">Current Weather</h2>
+        <div class="city"></div>
+      </div>
+
+      <div>
+        <h2 class="subtitle text-uppercase bg-light">5 Day forecast</h2>
+        <div class="five-day"></div>
+      </div>
+    </main>
+  </body>
+</html>
