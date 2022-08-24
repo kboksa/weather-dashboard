@@ -1,100 +1,74 @@
 /*GIVEN a weather dashboard with form inputs
 WHEN I search for a city
 THEN I am presented with current and future conditions for that city and that city is added to the search history*/
-function addResult() {
-  inputCity = document.getElementById("myInput").vaules;
-  historyList = getInfo();
-  var searchCity = $("<div>");
-  searchCity.attr("id ,inputCity");
-  searchCity.text(inputCity);
-  searchCity.addClass("h4");
+var apiKey = "d1e2d0763204896fd894698f5c6e27ee";
+var today = moment().format("L");
+var searchHistoryList = [];
 
-  if (historyList.includes(inputCity) === false) {
-    $(".historyList").append(searchCity);
-  }
-  $(".subtitle").attr("style", "display:inline");
-  addInfo(inputCity);
-}
+function currentCondition(city) {
 
-$(".history").on(`click`, function (event) {
-  event.preventDeault();
-  $(".subtitle").attr("style", "display:inline");
-  document.getElementById("myInput").value = evemt.target.id;
-  getResult();
-});
+    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`;
 
-document.getElementById("searchBtn").addEventListener("click", addResult);
-document.getElementById("searchBtn").addEventListener("click", getResult);
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(cityWeatherResponse) {
+        console.log(cityWeatherResponse);
+        
+        $("#weatherContent").css("display", "block");
+        $("#cityDetail").empty();
+        
+        var iconCode = cityWeatherResponse.weather[0].icon;
+        var iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
+
+// function addResult() {
+//   inputCity = document.getElementById("myInput").vaules;
+//   historyList = getInfo();
+//   var searchCity = $("<div>");
+//   searchCity.attr("id ,inputCity");
+//   searchCity.text(inputCity);
+//   searchCity.addClass("h4");
+
+//   if (historyList.includes(inputCity) === false) {
+//     $(".historyList").append(searchCity);
+//   }
+//   $(".subtitle").attr("style", "display:inline");
+//   addInfo(inputCity);
+// }
 
 /*WHEN I view current weather conditions for that city
 THEN I am presented with the city name, the date, an icon 
 representation of weather conditions, the temperature, the humidity, 
 the wind speed, and the UV index*/
-function getResult() {
-  $(".five-day").empty();
-  $(".city").empty();
+var currentCity = $(`
+<h2 id="currentCity">
+    ${cityWeatherResponse.name} ${today} <img src="${iconURL}" alt="${cityWeatherResponse.weather[0].description}" />
+</h2>
+<p>Temperature: ${cityWeatherResponse.main.temp} °F</p>
+<p>Humidity: ${cityWeatherResponse.main.humidity}\%</p>
+<p>Wind Speed: ${cityWeatherResponse.wind.speed} MPH</p>
+`);
 
-  inputCity = document.getElementById("myInput").value;
-  var countryCode = "US";
-  var cityCode = inputCity;
+$("#cityDetail").append(currentCity);
 
-  var geoLon;
-  var geoLat;
+var lat = cityWeatherResponse.coord.lat;
+var lon = cityWeatherResponse.coord.lon;
+var uviQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-  var cityName = $("<h>");
-  cityName.addClass("h3");
-  var temp = $("<div>");
-  var wind = $("<div>");
-  var humidity = $("<div>");
-  var uvIndex = $("<div>");
-  var icon = $("<img>");
-  icon.addClass("icon");
-  var dateTime = $("<div>");
+$.ajax({
+    url: uviQueryURL,
+    method: "GET"
+}).then(function(uviResponse) {
+    console.log(uviResponse);
 
-  $(".city").addClass("list-group")
-  $(".city").addClass(cityName)
-  $(".city").addClass(dateTime)
-  $(".city").addClass(icon)
-  $(".city").addClass(temp)
-  $(".city").addClass(wind)
-  $(".city").addClass(humidity)
-  $(".city").addClass(uvIndex)
+    var uvIndex = uviResponse.value;
+    var uvIndexP = $(`
+        <p>UV Index: 
+            <span id="uvIndexColor" class="px-2 py-2 rounded">${uvIndex}</span>
+        </p>
+    `);
 
-  var geoUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityCode + "," + countryCode + "&limit=5&appid=7d1b285353ccacd5326159e04cfab063"
-        
- 
-    fetch(geoUrl)
-  
-      
-      .then(function (response) {
-        return response.json();
+    $("#cityDetail").append(uvIndexP);
 
-})
+    futureCondition(lat, lon);
 
-.then(function (data) {
-    geoLon = data[0].lon;
-    geoLat = data[0].lat;
-
-    //use geoLat and geoLon to fetch the current weather
-    var weatherUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + geoLat + "&lon="+ geoLon + "&exclude=minutely,hourly,alerts&units=imperial&appid=7d1b285353ccacd5326159e04cfab063";
-      
-    fetch(weatherUrl)
-
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      // console.log(data)
-      
-      weatherIcon= data.current.weather[0].icon;
-      imgSrc = "https://openweathermap.org/img/wn/" + weatherIcon + ".png";
-      icon.attr('src',imgSrc)
-  
-      cityName.text(cityCode);
-      //translate utc to date
-      var date = new Date(data.current.dt * 1000);
-      dateTime.text("("+ (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + ")");
-
-      temp.text("Temperature: "+ data.current.temp + " F");
-      humidity.text("Humidity: " + data.current.humidity + " %");
-      wind.text("Wind Speed: " + data.current.wind_speed + " MPH");
