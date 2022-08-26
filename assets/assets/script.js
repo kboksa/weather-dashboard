@@ -1,131 +1,136 @@
-/*GIVEN a weather dashboard with form inputs
-WHEN I search for a city
-THEN I am presented with current and future conditions for that city and that city is added to the search history*/
-var apiKey = "d1e2d0763204896fd894698f5c6e27ee";
-var today = moment().format("L");
-var searchHistoryList = [];
+let localData = {
+  currentCity: "Chicago",
+};
 
-function currentCondition(city) {
-  var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`;
+$(document).ready(() => {
+  if (localStorage.getItem("city") === null) {
+    getWeather(localData.currentCity);
+  } else {
+    let lastStoredData = JSON.parse(localStorage.getItem("city"));
+    let lastStoredCity = lastStoredData.currentCity;
+    getWeather(lastStoredCity);
+  }
+});
 
-  $.ajax({
-    url: queryURL,
-    method: "GET",
-  }).then(function (cityWeatherResponse) {
-    console.log(cityWeatherResponse);
+let cities = [
+  "Boston",
+  "Washington",
+  "Honolulu",
+  "Las Vegas",
+  "San Francisco",
+  "Orlando",
+  "Los Angeles",
+  "Miami",
+  "New York",
+  "Houston",
+];
 
-    $("#weatherContent").css("display", "block");
-    $("#cityDetail").empty();
+// Function to Create Buttons - Cities -------->
+let createButtons = () => {
+  cities.forEach((el) => {
+    $("#cities").append(
+      $("<button>").text(el).attr("id", el).addClass("btn custom")
+    );
+  });
+};
 
-    var iconCode = cityWeatherResponse.weather[0].icon;
-    var iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
+// Current Weather -------------------------------------->
+function mainWeatherElements() {
+  $("#display-weather")
+    .append(
+      $("<div>")
+        .addClass("d-flex")
+        .append($("<h2>").text(`City Name`).attr("id", "current-city"))
+    )
+    .append($("<img>").attr("id", "current-icon"))
+    .append($("<p>").text(`Conditions`).addClass("weather-data conditions"))
+    .append($("<p>").text(`Temperature: `).addClass("weather-data temp"))
+    .append($("<p>").text(`Wind: `).addClass("weather-data wind"))
+    .append($("<p>").text(`Humidity: `).addClass("weather-data humidity"))
+    .append(
+      $("<p>")
+        .text(`UV Index: `)
+        .addClass("weather-data uv")
+        .append($("<span>").attr("id", "uv-span"))
+    );
+}
 
-    // function addResult() {
-    //   inputCity = document.getElementById("myInput").vaules;
-    //   historyList = getInfo();
-    //   var searchCity = $("<div>");
-    //   searchCity.attr("id ,inputCity");
-    //   searchCity.text(inputCity);
-    //   searchCity.addClass("h4");
+// Forecast ------------------------------------>
+function forecastElements() {
+  for (let i = 0; i < 5; i++) {
+    $("#forecast").append(
+      $("<div>")
+        .attr("id", i)
+        .addClass("forecastContainer")
+        .append($("<h3>").text(`Date`))
+        .append($("<img>").attr("src", ``))
+        .append($("<p>").addClass("pra-sm temper").text(`Temperature: `))
+        .append($("<p>").addClass("pra-sm wind").text(`Max Wind: `))
+        .append($("<p>").addClass("pra-sm humidity").text(`Humidity:`))
+    );
+  }
+}
+function getWeather(city) {
+  fetch(
+    `https://api.weatherapi.com/v1/forecast.json?key=604edc5bbafa4134908230121222508&q=${city}&days=5&aqi=no&alerts=no`
+  )
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+  let icon = data.current.condition.icon;
+  let currentCity = data.location.name;
+  let wind = data.current.wind_mph;
+  let humidity = data.current.humidity;
+  let temp = data.current.temp_f;
+  let uv = data.current.uv;
 
-    //   if (historyList.includes(inputCity) === false) {
-    //     $(".historyList").append(searchCity);
-    //   }
-    //   $(".subtitle").attr("style", "display:inline");
-    //   addInfo(inputCity);
-    // }
+  $("#current-city").text(
+    `${currentCity}, ${data.location.region}, ${
+      (data.location.country = "United States of America")
+        ? "USA"
+        : data.location.country
+    }`
+  );
+  $("#current-icon").attr("src", icon);
+  $(".conditions").text(`${data.current.condition.text}`);
+  $(".temp").text(`Temperature: ${temp}°F`);
+  $(".wind").text(`Wind: ${wind}mph / ${data.current.wind_dir}`);
+  $(".humidity").text(`Humidity: ${humidity}%`);
+  $("#uv-span").text(`${uv}`);
 
-    /*WHEN I view current weather conditions for that city
-THEN I am presented with the city name, the date, an icon 
-representation of weather conditions, the temperature, the humidity, 
-the wind speed, and the UV index*/
-    var currentCity = $(`
-    <h2 id="currentCity">
-     ${cityWeatherResponse.name} ${today} <img src="${iconURL}" alt="${cityWeatherResponse.weather[0].description}" />
-    </h2>
-    <p>Temperature: ${cityWeatherResponse.main.temp} °F</p>
-    <p>Humidity: ${cityWeatherResponse.main.humidity}\%</p>
-    <p>Wind Speed: ${cityWeatherResponse.wind.speed} MPH</p>
-`);
-
-    $("#cityDetail").append(currentCity);
-
-    var lat = cityWeatherResponse.coord.lat;
-    var lon = cityWeatherResponse.coord.lon;
-    var uviQueryURL = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}`;
-
-    $.ajax({
-      url: uviQueryURL,
-      method: "GET",
-    }).then(function (uviResponse) {
-      console.log(uviResponse);
-
-      var uvIndex = uviResponse.value;
-      var uvIndexP = $(`
-        <p>UV Index: 
-            <span id="uvIndexColor" class="px-2 py-2 rounded">${uvIndex}</span>
-        </p>
-    `);
-
-      $("#cityDetail").append(uvIndexP);
-
-      futureCondition(lat, lon);
-
-
+  for (let i = 0; i < 5; i++) {
+    $(`#${i} h3`).text(`${data.forecast.forecastday[i].date}`);
+    $(`#${i} img`).attr(
+      "src",
+      `${data.forecast.forecastday[i].day.condition.icon}`
+    );
+    $(`#${i} .temper`).text(
+      `Temperature: ${data.forecast.forecastday[i].day.avgtemp_f}°F`
+    );
+    $(`#${i} .wind`).text(
+      `Max Wind: ${data.forecast.forecastday[i].day.maxwind_mph}mph`
+    );
+    $(`#${i} .humidity`).text(
+      `Humidity: ${data.forecast.forecastday[i].day.avghumidity}%`
+    );
+  }
+}
 // WHEN I view the UV index
 // THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-// 0-2 green#3EA72D, 3-5 yellow#FFF300, 6-7 orange#F18B00, 8-10 red#E53210, 11+violet#B567A4
-if (uvIndex >= 0 && uvIndex <= 2) {
-  $("#uvIndexColor").css("background-color", "#3EA72D").css("color", "white");
-} else if (uvIndex >= 3 && uvIndex <= 5) {
-  $("#uvIndexColor").css("background-color", "#FFF300");
-} else if (uvIndex >= 6 && uvIndex <= 7) {
-  $("#uvIndexColor").css("background-color", "#F18B00");
-} else if (uvIndex >= 8 && uvIndex <= 10) {
-  $("#uvIndexColor").css("background-color", "#E53210").css("color", "white");
-} else {
-  $("#uvIndexColor").css("background-color", "#B567A4").css("color", "white");
-}
+// var uvIndex = $("<div>");
+// var uvi = $("<div>");
+// uvIndex.text("UV Index: ");
+// // uvi.text(data.current.uvi);
+// uvIndex.append(uvi);
+// uvIndex.addClass("d-flex");
 
-// function for future condition
-function futureCondition(lat, lon){
-    var futureURL = `https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API key}`;
-    $.ajax({
-        url: futureURL,
-        method: "GET"
-    }).then(function(futureResponse) {
-        console.log(futureResponse);
-        $("#fiveDay").empty();
-        
-        for (let i = 1; i < 6; i++) {
-            var cityInfo = {
-                date: futureResponse.daily[i].dt,
-                icon: futureResponse.daily[i].weather[0].icon,
-                temp: futureResponse.daily[i].temp.day,
-                humidity: futureResponse.daily[i].humidity
-            };
-
-            var currDate = moment.unix(cityInfo.date).format("MM/DD/YYYY");
-            var iconURL = `<img src="https://openweathermap.org/img/w/${cityInfo.icon}.png" alt="${futureResponse.daily[i].weather[0].main}" />`;
-
-            // displays the date
-            // an icon representation of weather conditions
-            // the temperature
-            // the humidity
-            var futureCard = $(`
-                <div class="pl-3">
-                    <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;>
-                        <div class="card-body">
-                            <h5>${currDate}</h5>
-                            <p>${iconURL}</p>
-                            <p>Temp: ${cityInfo.temp} °F</p>
-                            <p>Humidity: ${cityInfo.humidity}\%</p>
-                        </div>
-                    </div>
-                <div>
-            `);
-
-            $("#fiveDay").append(futureCard);
-        }
-    }); 
-}
+// if (data.current.uvi < 3) {
+//   uvi.attr("style", "background-color:green; color:black; margin-left: 5px");
+// } else if (data.current.uvi < 6) {
+//   uvi.attr("style", "background-color:yellow; color:black; margin-left: 5px");
+// } else if (data.current.uvi < 8) {
+//   uvi.attr("style", "background-color:orange; color:black; margin-left: 5px");
+// } else if (data.current.uvi < 11) {
+//   uvi.attr("style", "background-color:red; color:black; margin-left: 5px");
+// } else {
+//   uvi.attr("style", "background-color:purple; color:black; margin-left: 5px");
+// }

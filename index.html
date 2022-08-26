@@ -16,69 +16,45 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./assets/assets/style.css" />
-    <title>Document</title>
+    <title>Weather Dashboard</title>
   </head>
-  <!-- <h1>Weather Dashboard</h1> -->
+
   <body class="flex-colomn min-100-vh">
     <header class="hero">
       <h1 class="app-title">
         <i class="fas fa-cloud-sun-rain"></i> Weather Dashboard
       </h1>
     </header>
-    <body>
-          <div class="row">
-              <div class="col-3 bg-light pb-2 pt-3" id="searchResults">
-                  <div class="row">
-                      <div class="col-12">
-                          <h4>Search for a City:</h4>
-                      </div>
-                  </div>
-  
-                  <div class="row">
-                      <div class="col-12">
-                          <div class="input-group">
-                              <input class="form-control" type="text" id="enterCity"
-                                  placeholder="Enter city to view weather"><button type="button" id="searchBtn"
-                                  class="btn btn-primary"><i class="fas fa-search"></i></button>
-                          </div>
-                      </div>
-                  </div>
-  
-                  <div class="row mt-3">
-                      <div class="col-12">
-  
-                          <ul id="searchHistory" class="list-group">
-                              <!-- append li here li class="list-group-item"-->
-                          </ul>
-  
-                      </div>
-                  </div>
-              </div>
-  
-              <div id="weatherContent" class="col-9 pb-4 pt-4">
-                  <div class="row pb-3 mr-2 ml-2">
-                      <div id="cityDetail" class="col-12 border rounded px-3 py-3">
-                          <!-- display currentCity here text with p-->
-                      </div>
-                  </div>
-  
-                  <div class="row pb-2 pt-1">
-                      <div class="col-12 ml-2">
-                          <h3>5-Day Forecast:</h3>
-                      </div>
-                  </div>
-  
-                  <div id="fiveDay" class="row pl-2">
-                      <!-- add 5 day forecast info here -->
-                  </div>
-  
-              </div>
-          </div>
-  
-      </div>
-  
 
-    <script
+    <main class="flex-row justify-space-between">
+      <div class="col-12 col-sm-12 col-md-4 float-left">
+        <div class="card">
+          <h3 class="card-header text-uppercase">Search for a city</h3>
+          <div id="user-form" class="card-body">
+            <input type="text" id="myInput" placeholder="City Name..." />
+            <button class="btn" id="searchBtn">Search</button>
+          </div>
+        </div>
+
+        <div class="card history">
+          <h3 class="card-header text-uppercase">Search History</h3>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-12 col-md-8 float-right">
+        <div>
+          <h2 class="subtitle text-uppercase bg-light">Current Weather</h2>
+          <div class="city"></div>
+        </div>
+
+        <div>
+          <h2 class="subtitle text-uppercase bg-light">5 Day forecast</h2>
+          <div class="five-day"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
       crossorigin="anonymous"
@@ -91,8 +67,8 @@
     <script
       src="https://kit.fontawesome.com/1d37754851.js"
       crossorigin="anonymous"
-    ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    ></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/assets/script.js"></script>
   </body>
