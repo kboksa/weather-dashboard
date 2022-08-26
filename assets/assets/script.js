@@ -75,62 +75,43 @@ function getWeather(city) {
     `https://api.weatherapi.com/v1/forecast.json?key=604edc5bbafa4134908230121222508&q=${city}&days=5&aqi=no&alerts=no`
   )
     .then((response) => response.json())
-    .then((data) => console.log(data));
-  let icon = data.current.condition.icon;
-  let currentCity = data.location.name;
-  let wind = data.current.wind_mph;
-  let humidity = data.current.humidity;
-  let temp = data.current.temp_f;
-  let uv = data.current.uv;
+    .then((data) => {
+      let icon = data.current.condition.icon;
+      let currentCity = data.location.name;
+      let wind = data.current.wind_mph;
+      let humidity = data.current.humidity;
+      let temp = data.current.temp_f;
+      let uv = data.current.uv;
 
-  $("#current-city").text(
-    `${currentCity}, ${data.location.region}, ${
-      (data.location.country = "United States of America")
-        ? "USA"
-        : data.location.country
-    }`
-  );
-  $("#current-icon").attr("src", icon);
-  $(".conditions").text(`${data.current.condition.text}`);
-  $(".temp").text(`Temperature: ${temp}°F`);
-  $(".wind").text(`Wind: ${wind}mph / ${data.current.wind_dir}`);
-  $(".humidity").text(`Humidity: ${humidity}%`);
-  $("#uv-span").text(`${uv}`);
+      $("#current-city").text(
+        `${currentCity}, ${data.location.region}, ${
+          (data.location.country = "United States of America")
+            ? "USA"
+            : data.location.country
+        }`
+      );
+      $("#current-icon").attr("src", icon);
+      $(".conditions").text(`${data.current.condition.text}`);
+      $(".temp").text(`Temperature: ${temp}°F`);
+      $(".wind").text(`Wind: ${wind}mph / ${data.current.wind_dir}`);
+      $(".humidity").text(`Humidity: ${humidity}%`);
+      $("#uv-span").text(`${uv}`);
 
-  for (let i = 0; i < 5; i++) {
-    $(`#${i} h3`).text(`${data.forecast.forecastday[i].date}`);
-    $(`#${i} img`).attr(
-      "src",
-      `${data.forecast.forecastday[i].day.condition.icon}`
-    );
-    $(`#${i} .temper`).text(
-      `Temperature: ${data.forecast.forecastday[i].day.avgtemp_f}°F`
-    );
-    $(`#${i} .wind`).text(
-      `Max Wind: ${data.forecast.forecastday[i].day.maxwind_mph}mph`
-    );
-    $(`#${i} .humidity`).text(
-      `Humidity: ${data.forecast.forecastday[i].day.avghumidity}%`
-    );
-  }
+      for (let i = 0; i < 5; i++) {
+        $(`#${i} h3`).text(`${data.forecast.forecastday[i].date}`);
+        $(`#${i} img`).attr(
+          "src",
+          `${data.forecast.forecastday[i].day.condition.icon}`
+        );
+        $(`#${i} .temper`).text(
+          `Temperature: ${data.forecast.forecastday[i].day.avgtemp_f}°F`
+        );
+        $(`#${i} .wind`).text(
+          `Max Wind: ${data.forecast.forecastday[i].day.maxwind_mph}mph`
+        );
+        $(`#${i} .humidity`).text(
+          `Humidity: ${data.forecast.forecastday[i].day.avghumidity}%`
+        );
+      }
+    });
 }
-// WHEN I view the UV index
-// THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-// var uvIndex = $("<div>");
-// var uvi = $("<div>");
-// uvIndex.text("UV Index: ");
-// // uvi.text(data.current.uvi);
-// uvIndex.append(uvi);
-// uvIndex.addClass("d-flex");
-
-// if (data.current.uvi < 3) {
-//   uvi.attr("style", "background-color:green; color:black; margin-left: 5px");
-// } else if (data.current.uvi < 6) {
-//   uvi.attr("style", "background-color:yellow; color:black; margin-left: 5px");
-// } else if (data.current.uvi < 8) {
-//   uvi.attr("style", "background-color:orange; color:black; margin-left: 5px");
-// } else if (data.current.uvi < 11) {
-//   uvi.attr("style", "background-color:red; color:black; margin-left: 5px");
-// } else {
-//   uvi.attr("style", "background-color:purple; color:black; margin-left: 5px");
-// }
