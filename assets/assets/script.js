@@ -115,3 +115,23 @@ function getWeather(city) {
       }
     });
 }
+mainWeatherElements();
+forecastElements();
+createButtons();
+
+$(".custom").click((e) => {
+  e.preventDefault();
+  city = e.target.id;
+  localData.currentCity = city;
+  getWeather(city);
+  localStorage.setItem("city", JSON.stringify(localData));
+});
+
+$(".card-history").click((e) => {
+  e.preventDefault();
+  city = $("#city").val();
+  localData.currentCity = city;
+  getWeather(city);
+  $("#city").val("");
+  localStorage.setItem("city", JSON.stringify(localData));
+});

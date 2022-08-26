@@ -18,41 +18,36 @@
     <link rel="stylesheet" href="./assets/assets/style.css" />
     <title>Weather Dashboard</title>
   </head>
-
-  <body class="flex-colomn min-100-vh">
-    <header class="hero">
-      <h1 class="app-title">
-        <i class="fas fa-cloud-sun-rain"></i> Weather Dashboard
-      </h1>
-    </header>
-
-    <main class="flex-row justify-space-between">
-      <div class="col-12 col-sm-12 col-md-4 float-left">
-        <div class="card">
-          <h3 class="card-header text-uppercase">Search for a city</h3>
-          <div id="user-form" class="card-body">
-            <input type="text" id="myInput" placeholder="City Name..." />
-            <button class="btn" id="searchBtn">Search</button>
+  <body>
+    <nav class="navbar-light bg-primary d-flex justify-content-center">
+      <a class="navbar-brand text-center text-light" href="#">
+        Weather Dashboard
+      </a>
+    </nav>
+    <div class="rawcontainer d-flex">
+      <div class="search d-flex justify-content-center">
+        <form>
+          <div class="form-group d-flex flex-column align-items-center">
+            <h2>Search by City Name</h2>
+            <input
+              type="text"
+              class="form-control"
+              id="cityName"
+              placeholder="Type City Name..."
+            />
           </div>
-        </div>
-
-        <div class="card history">
-          <h3 class="card-header text-uppercase">Search History</h3>
-        </div>
+          <button type="submit" class="btn btn-primary searchBtn">
+            Search
+          </button>
+          <h3 class="text-center" id="cityHeader">Popular Cities in the USA</h3>
+          <div id="cities"></div>
+        </form>
       </div>
-
-      <div class="col-12 col-sm-12 col-md-8 float-right">
-        <div>
-          <h2 class="subtitle text-uppercase bg-light">Current Weather</h2>
-          <div class="city"></div>
-        </div>
-
-        <div>
-          <h2 class="subtitle text-uppercase bg-light">5 Day forecast</h2>
-          <div class="five-day"></div>
-        </div>
+      <div class="data">
+        <div class="" id="display-weather"></div>
+        <div id="forecast" class="d-flex"></div>
       </div>
-    </main>
+    </div>
 
     <!-- <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
