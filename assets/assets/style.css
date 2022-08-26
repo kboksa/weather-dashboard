@@ -1,32 +1,10 @@
-#weatherContent {
-  display: none;
+#cities{
+    display:flex
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.navbar {
-  height: 150px !important;
-}
-
-#cityDetail,
-#uvIndexColor,
-li {
-  color: #4d4f53 !important;
-}
-
-#searchResults,
-#cityDetail,
-.card {
-  background-color: #5a6c73 !important;
-}
-
-#searchResults {
-  height: 100vh;
-}
-
-#fiveDay .card {
-  border: 1px solid white !important;
-}
-
-#searchHistory li {
-  background-color: #97a6a4;
-  color: #f8f8ff !important;
+.form-control{
+    width: 10px;
+    height:10px
 }
