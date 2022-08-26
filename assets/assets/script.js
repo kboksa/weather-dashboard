@@ -12,7 +12,7 @@ $(document).ready(() => {
   }
 });
 
-let cities = [
+let places = [
   "Boston",
   "Washington",
   "Honolulu",
@@ -25,16 +25,15 @@ let cities = [
   "Houston",
 ];
 
-// Function to Create Buttons - Cities -------->
 let createButtons = () => {
-  cities.forEach((el) => {
-    $("#cities").append(
+  places.forEach((el) => {
+    $("#places").append(
       $("<button>").text(el).attr("id", el).addClass("btn custom")
     );
   });
 };
 
-// Current Weather -------------------------------------->
+// THEN I am presented with current and future conditions for
 function mainWeatherElements() {
   $("#display-weather")
     .append(
@@ -55,7 +54,8 @@ function mainWeatherElements() {
     );
 }
 
-// Forecast ------------------------------------>
+// THEN I am presented with a 5-day forecast that displays the date, an icon represe
+// ntation of weather conditions, the temperature, the wind speed, and the humidity
 function forecastElements() {
   for (let i = 0; i < 5; i++) {
     $("#forecast").append(
