@@ -14,9 +14,7 @@ https://kboksa.github.io/weather-dashboard/
 
 The user can search there city and get the weather conditions in that specific location
 
-    ```md
-    ![alt text](assets/images/screenshot.png)
-    ```
+![alt text](assets/screenshot.png)
 
 ## Credits
 
